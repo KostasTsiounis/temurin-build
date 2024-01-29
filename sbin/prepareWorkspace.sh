@@ -290,34 +290,47 @@ updateOpenj9Sources() {
     OPENJCEPLUS_FLAGS=""
     GSKIT_FLAGS=""
     GSKIT_CREDENTIALS=""
-    if [ "$JAVA_FEATURE_VERSION" -eq 17 ]
-    then
-      if [ "${BUILD_CONFIG[BUNDLE_OPENJCEPLUS]}" == "true" ]; then
+    
+    if [ "${BUILD_CONFIG[BUNDLE_OPENJCEPLUS]}" == "true" ]; then
+      SUPPORTED_PLATFORM=false
+      if [ "$TARGET_OS" = "linux"  ]; then
+        if [ "$ARCHITECTURE" = "x64" ] || [ "$ARCHITECTURE" = "ppc64le" ]; then
+          SUPPORTED_PLATFORM=true
+        fi
+      elif [ "$TARGET_OS" = "aix" ] || [ "$TARGET_OS" = "windows" ]; then
+          SUPPORTED_PLATFORM=true
+      fi
+
+      if [ "$SUPPORTED_PLATFORM" == "true" ]; then
         # Set the flags to get the OpenJCEPlus source code
-        OPENJCEPLUS_BRANCH="semeru-main"
-        # Set the flags to get the appropriate GSKit binaries
-        GSKIT_FOLDER="https://na.artifactory.swg-devops.com/artifactory/sec-gskit-javasec-generic-local/gskit8/20230802_8.9.5"
-        if [ "$TARGET_OS" = "linux"  ]; then
-          if [ "$ARCHITECTURE" = "x64"  ]; then
-            OPENJCEPLUS_FLAGS="-openjceplus-repo=https://github.com/ibmruntimes/OpenJCEPlus.git -openjceplus-branch=${OPENJCEPLUS_BRANCH}"
-            GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/linux64_x86/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/linux64_x86/jgsk_crypto_sdk.tar"
-            GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
-          elif [ "$ARCHITECTURE" = "ppc64le"  ]; then
-            OPENJCEPLUS_FLAGS="-openjceplus-repo=https://github.com/ibmruntimes/OpenJCEPlus.git -openjceplus-branch=${OPENJCEPLUS_BRANCH}"
-            GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/linux64_ppcle/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/linux64_ppcle/jgsk_crypto_sdk.tar"
-            GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
-          fi
+        if [ "$JAVA_FEATURE_VERSION" -eq 17 ]; then
+          OPENJCEPLUS_BRANCH="jdk17"
         fi
-        if [ "$TARGET_OS" = "aix"  ]; then
-          OPENJCEPLUS_FLAGS="-openjceplus-repo=https://github.com/ibmruntimes/OpenJCEPlus.git -openjceplus-branch=${OPENJCEPLUS_BRANCH}"
-          GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/aix64_ppc/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/aix64_ppc/jgsk_crypto_sdk.tar"
+        if [ "$JAVA_FEATURE_VERSION" -eq 21 ]; then
+          OPENJCEPLUS_BRANCH="jdk21"
+        fi
+        OPENJCEPLUS_FLAGS="-openjceplus-repo=https://github.com/ibmruntimes/OpenJCEPlus.git -openjceplus-branch=${OPENJCEPLUS_BRANCH}"
+      fi
+      
+      
+      # Set the flags to get the appropriate GSKit binaries
+      GSKIT_FOLDER="https://na.artifactory.swg-devops.com/artifactory/sec-gskit-javasec-generic-local/gskit8/20230802_8.9.5"
+      if [ "$TARGET_OS" = "linux"  ]; then
+        if [ "$ARCHITECTURE" = "x64"  ]; then
+          GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/linux64_x86/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/linux64_x86/jgsk_crypto_sdk.tar"
+          GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
+        elif [ "$ARCHITECTURE" = "ppc64le"  ]; then
+          GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/linux64_ppcle/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/linux64_ppcle/jgsk_crypto_sdk.tar"
           GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
         fi
-        if [ "$TARGET_OS" = "windows"  ]; then
-          OPENJCEPLUS_FLAGS="-openjceplus-repo=https://github.com/ibmruntimes/OpenJCEPlus.git -openjceplus-branch=${OPENJCEPLUS_BRANCH}"
-          GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/win64_x86/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/win64_x86/jgsk_crypto_sdk.tar"
-          GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
-        fi
+      fi
+      if [ "$TARGET_OS" = "aix"  ]; then
+        GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/aix64_ppc/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/aix64_ppc/jgsk_crypto_sdk.tar"
+        GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
+      fi
+      if [ "$TARGET_OS" = "windows"  ]; then
+        GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/win64_x86/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/win64_x86/jgsk_crypto_sdk.tar"
+        GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
       fi
     fi
     

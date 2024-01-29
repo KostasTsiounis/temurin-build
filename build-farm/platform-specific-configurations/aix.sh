@@ -126,11 +126,9 @@ if [ "${VARIANT}" == "${BUILD_VARIANT_OPENJ9}" ]; then
     export CONFIGURE_ARGS_FOR_ANY_PLATFORM="${CONFIGURE_ARGS_FOR_ANY_PLATFORM} --with-openssl=fetched"
   fi
 
-  if [ "$JAVA_FEATURE_VERSION" -eq 17 ]; then
-    # Add extra flag if OpenJCEPlus is to be bundled
-    if [[ $BUILD_ARGS == *"--bundle-openjceplus"* ]]; then
-      export CONFIGURE_ARGS_FOR_ANY_PLATFORM="${CONFIGURE_ARGS_FOR_ANY_PLATFORM} --enable-openjceplus"
-    fi
+  # Add extra flag if OpenJCEPlus is to be bundled
+  if [[ $BUILD_ARGS == *"--bundle-openjceplus"* ]]; then
+    export CONFIGURE_ARGS_FOR_ANY_PLATFORM="${CONFIGURE_ARGS_FOR_ANY_PLATFORM} --enable-openjceplus"
   fi
 else
   export CONFIGURE_ARGS_FOR_ANY_PLATFORM="${CONFIGURE_ARGS_FOR_ANY_PLATFORM} DF=/usr/sysv/bin/df"
