@@ -303,12 +303,7 @@ updateOpenj9Sources() {
 
       if [ "$SUPPORTED_PLATFORM" == "true" ]; then
         # Set the flags to get the OpenJCEPlus source code
-        if [ "$JAVA_FEATURE_VERSION" -eq 17 ]; then
-          OPENJCEPLUS_BRANCH="jdk17"
-        fi
-        if [ "$JAVA_FEATURE_VERSION" -eq 21 ]; then
-          OPENJCEPLUS_BRANCH="jdk21"
-        fi
+        OPENJCEPLUS_BRANCH="jdk$JAVA_FEATURE_VERSION"
         OPENJCEPLUS_FLAGS="-openjceplus-repo=https://github.com/ibmruntimes/OpenJCEPlus.git -openjceplus-branch=${OPENJCEPLUS_BRANCH}"
       fi
       
