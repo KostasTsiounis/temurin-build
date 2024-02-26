@@ -303,7 +303,7 @@ updateOpenj9Sources() {
 
       if [ "$SUPPORTED_PLATFORM" == "true" ]; then
         # Set the flags to get the OpenJCEPlus source code
-        OPENJCEPLUS_BRANCH="jdk$JAVA_FEATURE_VERSION"
+        OPENJCEPLUS_BRANCH="java$JAVA_FEATURE_VERSION"
         OPENJCEPLUS_FLAGS="-openjceplus-repo=https://github.com/ibmruntimes/OpenJCEPlus.git -openjceplus-branch=${OPENJCEPLUS_BRANCH}"
       fi
       
@@ -316,6 +316,9 @@ updateOpenj9Sources() {
           GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
         elif [ "$ARCHITECTURE" = "ppc64le"  ]; then
           GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/linux64_ppcle/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/linux64_ppcle/jgsk_crypto_sdk.tar"
+          GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
+        elif [ "$ARCHITECTURE" = "s390x"  ]; then
+          GSKIT_FLAGS="-gskit-bin=${GSKIT_FOLDER}/linux64_s390/jgsk_crypto.tar -gskit-sdk-bin=${GSKIT_FOLDER}/linux64_s390/jgsk_crypto_sdk.tar"
           GSKIT_CREDENTIALS="-gskit-credential=$GSKIT_USERNAME:$GSKIT_PASSWORD"
         fi
       fi
