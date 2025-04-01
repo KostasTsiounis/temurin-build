@@ -419,8 +419,13 @@ updateOpenj9Sources() {
       fi
     fi
     
+    OPENSSL_VERSION="openssl-3.0.16"
+    if [ "$ARCHITECTURE" = "ppc64le"  ]; then
+      OPENSSL_VERSION="openssl-3.4.1"
+    fi
+    OPENSSL_FLAG="-openssl-branch=${OPENSSL_VERSION}"
     # NOTE: fetched openssl will NOT be used in the RISC-V cross-compile situation
-    bash get_source.sh -openssl-branch=openssl-3.0.16 ${OPENJCEPLUS_FLAGS} ${GSKIT_FLAGS} ${GSKIT_CREDENTIALS}
+    bash get_source.sh ${OPENSSL_FLAG} ${OPENJCEPLUS_FLAGS} ${GSKIT_FLAGS} ${GSKIT_CREDENTIALS}
     cd "${BUILD_CONFIG[WORKSPACE_DIR]}"
   fi
 }
